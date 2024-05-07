@@ -79,7 +79,7 @@ def hba(pop,dim,lb,ub,Max_iter,fun):
     GbestPositon[0, :] = X[0, :]
     Curve = np.zeros([Max_iter, 1])
     C = 2                                          
-    beta = 6                                       
+    beta = 6         # these parameters are experimentally set to these values, they control a sort of senitivty and are plugged into forumulas                              
     vec_flag=[1,-1]
     vec_flag=np.array(vec_flag)
     Xnew = np.zeros([pop, dim])
