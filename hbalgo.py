@@ -3,7 +3,6 @@ import time
 import numpy as np
 rng = np.random.default_rng()
 import math
-import sys
 from numpy import linalg as LA
 
 def fun(X):
@@ -79,29 +78,29 @@ def hba(pop,dim,lb,ub,Max_iter,fun):
     GbestPositon = np.zeros([1, dim])
     GbestPositon[0, :] = X[0, :]
     Curve = np.zeros([Max_iter, 1])
-    C = 2                                          # constant in Eq. (3)
-    beta = 6                                       # the ability of HB to get the food  Eq.(4)
+    C = 2                                          
+    beta = 6                                       
     vec_flag=[1,-1]
     vec_flag=np.array(vec_flag)
     Xnew = np.zeros([pop, dim])
     for t in range(Max_iter):
         #print("iteration: ",t)
-        alpha=C*math.exp(-t/Max_iter)             # density factor in Eq. (3)
-        I=Intensity(pop,GbestPositon,X)           # intensity in Eq. (2)
+        alpha=C*math.exp(-t/Max_iter)            
+        I=Intensity(pop,GbestPositon,X)           
         Vs=random.random()
         for i in range(pop):
           Vs=random.random()
           F=vec_flag[math.floor((2*random.random()))]
           for j in range(dim):
             di=GbestPositon[0,j]-X[i,j]
-            if (Vs <0.5):                           # Digging phase Eq. (4)
+            if (Vs <0.5):                           
               r3=np.random.random()
               r4=np.random.randn()
               r5=np.random.randn()
               Xnew[i,j]=GbestPositon[0,j] +F*beta*I[i]* GbestPositon[0,j]+F*r3*alpha*(di)*np.abs(math.cos(2*math.pi*r4)*(1-math.cos(2*math.pi*r5)))
             else:
               r7=random.random()
-              Xnew[i,j]=GbestPositon[0,j]+F*r7*alpha*di    # Honey phase Eq. (6)
+              Xnew[i,j]=GbestPositon[0,j]+F*r7*alpha*di    
           #print(di)
           Xnew[i,:] = BorderCheck1(Xnew[i,:], lb, ub, dim)
           tempFitness = CaculateFitness1(Xnew[i,:], fun)
@@ -117,27 +116,29 @@ def hba(pop,dim,lb,ub,Max_iter,fun):
         Curve[t] = GbestScore
     return GbestScore,GbestPositon,Curve
 
-rng = np.random.default_rng()
-time_start = time.time()
-pop = 50                    # Honey Badger population size.
-MaxIter = 600               # Maximum number of iterations.
-dim = 20                    # The dimension.
-fl=-10                    # The lower bound of the search interval.
-ul=10                      # The upper bound of the search interval.
-lb = fl*np.ones([dim, 1])
-ub = ul*np.ones([dim, 1])
-GbestScore, GbestPositon, Curve = hba(pop, dim, lb, ub, MaxIter, fun)
-time_end = time.time()
-print(f"The running time is: {time_end  - time_start } s")
-print('The optimal value：',GbestScore)
-print('The optimal solution：',GbestPositon)
 
-import matplotlib.pyplot as plt
+if __name__ == '__main__':
+    rng = np.random.default_rng()
+    time_start = time.time()
+    pop = 50                    # Honey Badger population size.
+    MaxIter = 600               # Maximum number of iterations.
+    dim = 20                    # The dimension.
+    fl=-10                    # The lower bound of the search interval.
+    ul=10                      # The upper bound of the search interval.
+    lb = fl*np.ones([dim, 1])
+    ub = ul*np.ones([dim, 1])
+    GbestScore, GbestPositon, Curve = hba(pop, dim, lb, ub, MaxIter, fun)
+    time_end = time.time()
+    print(f"The running time is: {time_end  - time_start } s")
+    print('The optimal value：',GbestScore)
+    print('The optimal solution：',GbestPositon)
 
-fig, ax = plt.subplots()
-ax.plot( Curve,color='dodgerblue', marker='o', markeredgecolor='k', markerfacecolor='dodgerblue')
+    import matplotlib.pyplot as plt
 
-ax.set_xlabel('Number of Iterations',fontsize=15)
-ax.set_ylabel('Fitness',fontsize=15)
-ax.set_title('Honey Badger Optimization')
-plt.show()
+    fig, ax = plt.subplots()
+    ax.plot( Curve,color='dodgerblue', marker='o', markeredgecolor='k', markerfacecolor='dodgerblue')
+
+    ax.set_xlabel('Number of Iterations',fontsize=15)
+    ax.set_ylabel('Fitness',fontsize=15)
+    ax.set_title('Honey Badger Optimization')
+    plt.show()
